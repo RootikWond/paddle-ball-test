@@ -5,13 +5,34 @@ using UnityEngine;
 public class PaddleManager : MonoBehaviour
 {
     //paddles amount
-    private int paddlesAmount = 6;
+    private int paddlesAmount = 4;
     //radius of paddles position
     [SerializeField] private float radius = 4;
     [SerializeField] private Paddle paddlePrefab;
     [HideInInspector] public List<Paddle> paddles = new List<Paddle>();
-    //holder for 2 paddles
-    public PaddleHolder paddleHolder;
+
+
+    [SerializeField] private BoolEventSO OnResetControllers;
+
+    private void OnEnable()
+    {
+        OnResetControllers.OnEventRaised += ResetPaddles;
+
+    }
+    private void OnDisable()
+    {
+        OnResetControllers.OnEventRaised -= ResetPaddles;
+    }
+
+    private void ResetPaddles(bool value)
+    {
+        foreach (Paddle paddle in paddles)
+        {
+            paddle.transform.localPosition = paddle.startPosition;
+            paddle.rigidbody2D.velocity = Vector2.zero;
+        }
+    }
+
     private void Start()
     {
         SetupPaddles();
@@ -19,20 +40,24 @@ public class PaddleManager : MonoBehaviour
     //paddles placed along circle, counterclock-wise, start from right
     private void SetupPaddles()
     {
-        if (paddlesAmount > 0)
+        for (int i = 0; i < 4; i++)
         {
-            for (int i = 0; i < paddlesAmount; i++)
-            {
-                float angle = i * Mathf.PI * 2f / paddlesAmount;
-                var point = Vector3.zero + (new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius, 0));
-                var inst = Instantiate(paddlePrefab, transform);
+            float angle = i * Mathf.PI * 2f / paddlesAmount;
+            var point = Vector3.zero + (new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius, 0));
+            var inst = Instantiate(paddlePrefab, transform);
+            
+            inst.transform.position = new Vector3(point.x, point.y, 0);
+            var direction = Vector3.zero - inst.transform.position;
+            inst.startPosition = inst.transform.position;
 
-                inst.transform.position = new Vector3(point.x, point.y, 0);
-                var direction = Vector3.zero - inst.transform.position;
-                inst.transform.up = direction;
-                paddles.Add(inst);
-            }
+            inst.transform.up = direction;
+            paddles.Add(inst);
         }
+
+        //set paddle neighbor for simultaneous movement
+        paddles[0].SetNeighbor(paddles[2]);
+        paddles[1].SetNeighbor(paddles[3]);
+
 
     }
     //grab nearest paddle

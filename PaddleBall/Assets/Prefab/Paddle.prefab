@@ -141,8 +141,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4113812013797135879}
   - component: {fileID: 2295789044575422735}
-  - component: {fileID: 8655948404073988324}
   - component: {fileID: 8814173784959577316}
+  - component: {fileID: 462731197950358774}
   m_Layer: 9
   m_Name: Paddle
   m_TagString: Untagged
@@ -179,27 +179,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rigidbody2D: {fileID: 0}
   neighbor: {fileID: 0}
---- !u!50 &8655948404073988324
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4113812013797135877}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0
-  m_GravityScale: 0
-  m_Material: {fileID: 6200000, guid: ae12c6beb0772de46b17f0714ea709b4, type: 2}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 1
-  m_Constraints: 4
 --- !u!61 &8814173784959577316
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -226,3 +205,24 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.5, y: 0.4}
   m_EdgeRadius: 0
+--- !u!50 &462731197950358774
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4113812013797135877}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4

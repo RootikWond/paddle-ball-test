@@ -4,41 +4,63 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    public GameObject ball;
-    [SerializeField] private IntEventSO OnBallDamaged;
+    public int playerHP = 3;
+    [SerializeField] private IntEventSO OnBallDestroyed;
+    [SerializeField] private IntEventSO OnBlockDestroyed;
     [SerializeField] private VoidEventSO OnLevelFailed;
     [SerializeField] private VoidEventSO OnLevelWin;
+    [SerializeField] private BoolEventSO OnResetControllers;
+    [SerializeField] private IntEventSO UpdateLives;
     private void OnEnable()
     {
-        OnBallDamaged.OnEventRaised += ResetLevel;
-        OnLevelFailed.OnEventRaised += RestartLevel;
-        OnLevelWin.OnEventRaised += NextLevel;
+        OnBallDestroyed.OnEventRaised += BallDestroyed;
+        OnBlockDestroyed.OnEventRaised += BlockDestroyed;
+       
     }
     private void OnDisable()
     {
-        OnBallDamaged.OnEventRaised -= ResetLevel;
-        OnLevelFailed.OnEventRaised -= RestartLevel;
-        OnLevelWin.OnEventRaised -= NextLevel;
+        OnBallDestroyed.OnEventRaised -= BallDestroyed;
+        OnBlockDestroyed.OnEventRaised -= BlockDestroyed;
     }
 
-    private void ResetLevel(int lifeAmount)
+    private void BallDestroyed(int value)
     {
-        //Reset ball position
-        //Reset paddle position
-        //Wait for interactions
+        playerHP -= value;
+        OnResetControllers.RaiseEvent(true);
+        if (playerHP > 0)
+        {
+            
+            UpdateLives.RaiseEvent(playerHP);
+        } else
+        {
+            playerHP = 3;
+            OnLevelFailed.RaiseEvent();
+            UpdateLives.RaiseEvent(playerHP);
+            OnResetControllers.RaiseEvent(true);
+        }
     }
-    private void RestartLevel()
+        
+    private void BlockDestroyed(int blocksAmount)
     {
-        //Reset ball position
-        //Reset paddle position
-        //Wait for interactions
+        if (blocksAmount <= 0)
+        {
+            playerHP = 3;
+            OnLevelWin.RaiseEvent();
+            UpdateLives.RaiseEvent(playerHP);
+            OnResetControllers.RaiseEvent(true);
+        }
     }
-    private void NextLevel()
+    IEnumerator WaitForLevelReset(float time)
     {
-        //Load Next Level
-        //Reset ball position
-        //Reset paddle position
-        //Wait for interactions
+        yield return new WaitForSeconds(time);
+        
+
+    }
+    IEnumerator WaitForNextLevel(float time)
+    {
+        yield return new WaitForSeconds(time);
+       
+
     }
 
 }

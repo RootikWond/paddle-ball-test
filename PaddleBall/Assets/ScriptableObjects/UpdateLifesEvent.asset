@@ -9,6 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3717c2f4b61f2174d91fb8b84beac9b0, type: 3}
-  m_Name: SceneReadyEvent
+  m_Script: {fileID: 11500000, guid: 2d648c021ac01484f8c9d87e1e7a0f44, type: 3}
+  m_Name: UpdateLifesEvent
   m_EditorClassIdentifier: 
