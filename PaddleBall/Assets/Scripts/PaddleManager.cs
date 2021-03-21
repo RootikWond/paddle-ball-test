@@ -7,10 +7,10 @@ public class PaddleManager : MonoBehaviour
     //paddles amount
     private int paddlesAmount = 4;
     //radius of paddles position
-    [SerializeField] private float radius = 4;
+    private float radius = 4;
     [SerializeField] private Paddle paddlePrefab;
     [HideInInspector] public List<Paddle> paddles = new List<Paddle>();
-
+    public EdgeCollider2D box;
 
     [SerializeField] private BoolEventSO OnResetControllers;
 
@@ -35,6 +35,19 @@ public class PaddleManager : MonoBehaviour
 
     private void Start()
     {
+        //resize collider
+        var screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
+        var minSide = Mathf.Min(screenBounds.x, screenBounds.y);
+        var colliderPoints = box.points;
+        for (int i = 0; i < colliderPoints.Length; i++)
+        {
+            var point = colliderPoints[i];
+            point.x *= minSide;
+            point.y *= minSide;
+            colliderPoints.SetValue(point, i);
+        }
+        box.points = colliderPoints;
+        radius = minSide - minSide*0.2f;
         SetupPaddles();
     }
     //paddles placed along circle, counterclock-wise, start from right
