@@ -39,15 +39,10 @@ public class GameController : MonoBehaviour
 
             if (touch.phase.Equals(TouchPhase.Began))
             {
-                InterationBegan();
+                InteractionBegan();
             }
-            InterationMoved(touch.position);
+            InterationRotationMoved(touch.position);
 
-            if (touch.phase.Equals(TouchPhase.Ended))
-            {
-                InterationEnded();
-
-            }
         }
         else
         {
@@ -55,62 +50,49 @@ public class GameController : MonoBehaviour
             {
                 return;
             }
-            if (Input.GetMouseButton(0))
-            {
-                InterationMoved(Input.mousePosition);
-            }
             if (Input.GetMouseButtonDown(0))
             {
-                InterationBegan();
+            
+                InteractionBegan();
+               
+
             }
-            if (Input.GetMouseButtonUp(0))
+
+            if (Input.GetMouseButton(0))
             {
-                InterationEnded();
+                   InterationRotationMoved(Input.mousePosition);
             }
+       
         }
 
     }
-    private void FixedUpdate()
+
+    private void InteractionBegan()
     {
-        
-    }
-    private void InterationBegan()
-    {
+        var interactionPoint = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        selectedPaddle = _paddleManager.GrabClosestPadlle(interactionPoint);
         if (!isBallLaunched)
         {
             LaunchBall();
         }
 
     }
-    private void InterationMoved(Vector2 point)
+
+    private void InterationRotationMoved(Vector2 point)
     {
         if (isInputEnabled)
         {
             var interactionPoint = _mainCamera.ScreenToWorldPoint(point);
-            interactionPoint.z = 0;
+            Vector3 dir = interactionPoint - Vector3.zero;
 
-            if (selectedPaddle == null)
+            float angle = Mathf.Atan2(dir.y, dir.x);
+        
+            if (selectedPaddle != null)
             {
-                selectedPaddle = _paddleManager.GrabClosestPadlle(interactionPoint);
-            }
-            else
-            {
-                var direction = (interactionPoint - selectedPaddle.transform.localPosition);
-                var dot = (selectedPaddle.transform.right * Vector2.Dot(selectedPaddle.transform.right, direction));
-                var velocity = new Vector2(dot.x, dot.y) * paddleSpeed;
-                selectedPaddle.MoveGroup(velocity);
+                _paddleManager.MovePaddle(selectedPaddle, angle);
             }
         }
-       
-    }
-    private void InterationEnded()
-    {
-        if (selectedPaddle != null)
-        {
-            selectedPaddle.MoveGroup(Vector2.zero);
-            selectedPaddle = null;
-        }
-           
+
     }
 
     private void WaitForInput(bool value)
